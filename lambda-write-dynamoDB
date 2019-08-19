@@ -1,0 +1,22 @@
+....
+#select correct table based on input data
+dynamodb = boto3.client('dynamodb')
+if event['reviewType'] == 'Product':
+    tableName = 'my-products-table'
+elif event['reviewType'] == 'Service':
+    tableName = 'my-services-table'
+else:
+    raise Exception("Input review is neither Product nor Service")
+
+#construct response to put data in table
+response = dynamodb.put_item(
+    TableName=tableName,
+    Item={
+        'reviewID': {"N": event['reviewID'] },
+        'customerID': {"N": event['customerID'] },
+        'productID': {"N": event['productID'] },
+        'feedback': {"S": event['feedback'] },
+        'sentiment': {"S": event['sentiment'] }
+    },
+)
+...
